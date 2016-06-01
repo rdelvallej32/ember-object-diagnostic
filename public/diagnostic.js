@@ -1,4 +1,7 @@
 /// Ember Object Diagnostic ///
+"use strict";
+
+import Ember from 'ember';
 
 // Use Ember Objects and Classes to represent a shopping cart!
 // Your abstractions will be `Cart` and `Order`.
@@ -7,7 +10,20 @@
 //  -  a unit price
 //  -  a quantity
 //  -  a computed property called `orderPrice`, equal to price times quantity
-//
+
+const Order = Ember.Object.extend({
+
+  unitPrice: null,
+  quantity: null,
+
+  orderPrice: Ember.computed('unitPrice', 'quantity', function() {
+    let unitPrice = this.get('unitPrice'),
+        quantity  = this.get('quantity');
+
+    return quantity * unitPrice;
+  })
+});
+
 // A Cart should have
 //  -  an `addToCart` method, which adds a given Item to an array
 //      called `orders` (HINT: You'll probably need to look through the
@@ -16,10 +32,34 @@
 //      the `orderPrice` values for everything in the cart); it should be
 //      recalculated any time an Order is added to the cart, removed from the
 //      cart, or modified.
-//
+
+const Cart = Ember.Object.extend({
+
+  orders: [],
+  addToCart: function() {
+    let orders = this.get('orders');
+      orders.addObject();
+  },
+
+  totalPrice: Ember.computed('orders.@each.orderPrice', function() {
+    let orders = this.get('orders');
+
+    return orders.reduce((prev, curr) => prev.orderPrice + curr.orderPrice );
+  })
+});
+
 // Once you've created the necessary Ember Classes, create a new Cart instance,
 //  and fill that cart up with three new product orders having the following
 //  quantities, product names, and prices:
 //  -  Order 1 : 2 hats ($5 each)
 //  -  Order 2 : 1 desk lamp ($20 each)
 //  -  Order 3 : 3 hand towels ($8 each)
+
+let cart = Car.create({
+  orders: [
+    Ember.Object.create({ name: 'hat', quantity: 2, unitPrice: 5.00 }),
+    Ember.Object.create({ name: 'hat', quantity: 2, unitPrice: 5.00 }),
+    Ember.Object.create({ nname: 'hat', quantity: 2, unitPrice: 5.00 })  
+  ]
+
+});
